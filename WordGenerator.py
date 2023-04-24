@@ -10,12 +10,22 @@ def decomposeByN(fileName,letterBag,n):
     with open(fileName,encoding='utf8') as f:
         lineByLine = f.readlines()
         for line in lineByLine:
+            #makes all words in line lower case for ease of camparison
             line = line.lower()
+            #cleans the lines 
             words = clean(line)
-            while(len(words) > 0):
-                word = words[0]
+            while(len(words) > n-1):
+                #chops off the first n words and then concats them together
+                word = words[:n]
+                convertingToString = ""
+                for i in range(len(word)-1):
+                    convertingToString = convertingToString + word[i]+" "
+                convertingToString = convertingToString + word[len(word)-1]
+                word = convertingToString
+                #ignores empty lines
                 if(word==""):
                     break
+                #adds a new entry if one does not exists, else add one to it
                 if(not(letterBag.get(word)==None)):
                     inta = letterBag.get(word)#inta is intaga (integer) the current count of the word
                     inta = inta+1
@@ -29,9 +39,9 @@ def decomposeByN(fileName,letterBag,n):
         f.close()
     
     #change all the occurances to percentages by dividing by numWords
-    keys = list(letterBag.keys())
-    for key in keys:
-        letterBag.update({key:letterBag.get(key)/numWords})
+#     keys = list(letterBag.keys())
+#     for key in keys:
+#         letterBag.update({key:letterBag.get(key)/numWords})
     
     return(letterBag)
     
@@ -39,7 +49,7 @@ def decomposeByN(fileName,letterBag,n):
     
 #removes all but letters and spaces from the documents
 def clean(line):
-    cleanStrings = "".join(re.findall("[a-z ]",line))  # capture the inner number only
+    cleanStrings = "".join(re.findall("[a-z ]",line)) 
     rtrn = re.split(" ", cleanStrings)
     return rtrn
 
