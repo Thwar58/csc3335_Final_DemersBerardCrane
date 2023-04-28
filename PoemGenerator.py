@@ -20,17 +20,17 @@ def cleanAndTxt():
         output = re.sub(',,+', ' ', output).strip()
         output = re.sub('  +', '\n', output)
         output = re.sub('\n+', '\n', output)
-        output = re.sub(',', ', ', output)
+        output = re.sub("[,.]", ' ', output)
         output = re.sub('  +', ' ', output)
         output = re.sub('\n +', '\n', output)
         output = re.sub('\n+', '\n', output).strip()
-        f_out.write(output)
+        f_out.write(output.lower())
 
 # cleanAndTxt()
 
 # Generating the corpus by splitting the text into lines
 data = open('CleanedPoetry.txt', encoding="utf8").read()
-corpus = data.lower().split("\n")
+corpus = data.split("\n")
 # for each line in the corpus
 for line in corpus:
     # remove the line if it is too long
@@ -57,23 +57,24 @@ for line in corpus:
         input_sequences.append(n_gram_sequence)
 
 max_sequence_len = max([len(x) for x in input_sequences])
+# print(max_sequence_len)
 input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_len, padding='pre'))
 predictors, label = input_sequences[:, :-1], input_sequences[:, -1]
 label = ku.to_categorical(label, num_classes=total_words+1)
 
 # Building a Bi-Directional LSTM Model
 model = Sequential()
-model.add(Embedding(total_words+1, 100, input_length=max_sequence_len-1))
-model.add(Bidirectional(LSTM(150, return_sequences=True)))
+model.add(Embedding(total_words+1, 50, input_length=max_sequence_len-1))
+model.add(Bidirectional(LSTM(75, return_sequences=True)))
 model.add(Dropout(0.2))
-model.add(LSTM(100))
+model.add(LSTM(50))
 model.add(Dense(total_words+1/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
 model.add(Dense(total_words+1, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 print(model.summary())
 
-history = model.fit(predictors, label, epochs=15, verbose=1)
+history = model.fit(predictors, label, epochs=5, verbose=1)
 
 seed_text = "The world"
 next_words = 25
@@ -81,11 +82,8 @@ ouptut_text = ""
 
 for _ in range(next_words):
     token_list = tokenizer.texts_to_sequences([seed_text])[0]
-    token_list = pad_sequences(
-        [token_list], maxlen=max_sequence_len-1,
-        padding='pre')
-    predicted = np.argmax(model.predict(token_list,
-                                        verbose=0), axis=-1)
+    token_list = pad_sequences( [token_list], maxlen=max_sequence_len-1, padding='pre')
+    predicted = np.argmax(model.predict(token_list, verbose=0), axis=-1)
     output_word = ""
 
     for word, index in tokenizer.word_index.items():
