@@ -58,13 +58,13 @@ oneLB = {}
 
 file = nameOfFile
 
-try:
-    decomposeByN(file,oneLB,1)
+# try:
+#     decomposeByN(file,oneLB,1)
         
-except FileNotFoundError:
-    print("File not found when reading in.")
-print("There are "+str(numWords)+" words.")
-print(str(oneLB))
+# except FileNotFoundError:
+#     print("File not found when reading in.")
+# print("There are "+str(numWords)+" words.")
+# print(str(oneLB))
 
 
 
