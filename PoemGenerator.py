@@ -10,6 +10,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import regularizers
+from tensorflow.keras.models import load_model
 # Using code from: https://www.geeksforgeeks.org/lstm-based-poetry-generation-using-nlp-in-python/#
 
 # cleans data and outputs to .txt file
@@ -34,7 +35,7 @@ corpus = data.split("\n")
 # for each line in the corpus
 for line in corpus:
     # remove the line if it is too long
-    if(len(line) > 50):
+    if(len(line) > 30):
         corpus.remove(line)
 # print(corpus[:15])
 
@@ -57,26 +58,32 @@ for line in corpus:
         input_sequences.append(n_gram_sequence)
 
 max_sequence_len = max([len(x) for x in input_sequences])
-# print(max_sequence_len)
-input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_len, padding='pre'))
-predictors, label = input_sequences[:, :-1], input_sequences[:, -1]
-label = ku.to_categorical(label, num_classes=total_words+1)
+# input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_len, padding='pre'))
+# predictors, label = input_sequences[:, :-1], input_sequences[:, -1]
+# label = ku.to_categorical(label, num_classes=total_words+1)
 
-# Building a Bi-Directional LSTM Model
-model = Sequential()
-model.add(Embedding(total_words+1, 50, input_length=max_sequence_len-1))
-model.add(Bidirectional(LSTM(75, return_sequences=True)))
-model.add(Dropout(0.2))
-model.add(LSTM(50))
-model.add(Dense(total_words+1/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-model.add(Dense(total_words+1, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# # Building a Bi-Directional LSTM Model
+# model = Sequential()
+# model.add(Embedding(total_words+1, 25, input_length=max_sequence_len-1))
+# model.add(Bidirectional(LSTM(40, return_sequences=True)))
+# model.add(Dropout(0.2))
+# model.add(LSTM(25))
+# model.add(Dense(total_words+1/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
+# model.add(Dense(total_words+1, activation='softmax'))
+# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-print(model.summary())
+# print(model.summary())
 
-history = model.fit(predictors, label, epochs=5, verbose=1)
+# history = model.fit(predictors, label, epochs=1, verbose=1)
 
-seed_text = "The world"
+# # Save the model
+# model.save("model.h5")
+# print("Saved model to disk")
+
+# Load the model
+model = load_model('model.h5')
+
+seed_text = "The sun is"
 next_words = 25
 ouptut_text = ""
 
