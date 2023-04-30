@@ -76,6 +76,10 @@ print(model.summary())
 
 history = model.fit(predictors, label, epochs=5, verbose=1)
 
+# Save the model
+model.save("model.h5")
+print("Saved model to disk")
+
 seed_text = "The world"
 next_words = 25
 ouptut_text = ""
