@@ -98,12 +98,46 @@ def replaceNouns(poem, nouns):
     
     
 def replaceVerbs(poem, verbs):
-    i = 0
+    splitPoem = poem.split("\n")
+    output = ""
+    for line in splitPoem:
+        #breaks up and labels the poem
+        segmentedLine = word_tokenize(line)
+        labeledData = nltk.pos_tag(segmentedLine, lang='eng')
+        #counter of how many nousn there are
+        cnt = 0
+        #tup is tuple of word w POS
+        for i in range(len(labeledData)):
+            if(labeledData[i][1]=="VBZ" or labeledData[i][1]=="VBG"or labeledData[i][1]=="VBP"or labeledData[i][1]=="VBN"or labeledData[i][1]=="VB"or labeledData[i][1]=="VBD"):
+                cnt = cnt+1
+        #cnt now has the count of the total number of nouns
+        cnt = int(cnt/2)
+        #the posision so only replace every other noun
+        posCnt = 0;
+        #the position of the pointer in the noun list
+        nounCnt = 0;
+        
+        for i in range(len(labeledData)):
+            if(labeledData[i][1]=="VBZ" or labeledData[i][1]=="VBP"or labeledData[i][1]=="VBN"or labeledData[i][1]=="VB"or labeledData[i][1]=="VBD"):
+                if(posCnt % 2==0):
+                    labeledData[i] = (verbs[nounCnt],"VB")
+                posCnt = (posCnt + 1)
+                nounCnt = (nounCnt + 1) % len(verbs)
+                
+            if(labeledData[i][1]=="VBG"):
+                if(posCnt % 2==0):
+                    labeledData[i] = (verbs[nounCnt] + "ing","VBG")
+                posCnt = (posCnt + 1)
+                nounCnt = (nounCnt + 1) % len(verbs)
+        for word in labeledData:
+            output = output + " " + word[0]
+        output = output +"\n"
+    return output
     
     
-# poem = genPoem(3)
-# print(poem)
-# p = replaceNouns(poem,["cow","chicken","pig"])
-# print(p)
+poem = genPoem(3)
+print(poem)
+p = replaceVerbs(poem,["cow","chicken","pig"])
+print(p)
 
 
