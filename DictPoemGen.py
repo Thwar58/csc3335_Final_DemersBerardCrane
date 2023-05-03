@@ -59,8 +59,14 @@ def genPoem(sz):
     return poem
 
 def replaceNouns(poem, nouns):
+    print(nouns)
     splitPoem = poem.split("\n")
     output = ""
+    #the posision so only replace every other noun
+    posCnt = 0;
+    #the position of the pointer in the noun list
+    nounCnt = 0;
+
     for line in splitPoem:
         #breaks up and labels the poem
         segmentedLine = word_tokenize(line)
@@ -73,23 +79,20 @@ def replaceNouns(poem, nouns):
                 cnt = cnt+1
         #cnt now has the count of the total number of nouns
         cnt = int(cnt/2)
-        #the posision so only replace every other noun
-        posCnt = 0;
-        #the position of the pointer in the noun list
-        nounCnt = 0;
         
         for i in range(len(labeledData)):
             if(labeledData[i][1]=="NN"):
                 if(posCnt % 2==0):
                     labeledData[i] = (nouns[nounCnt],"NN")
+                    nounCnt = (nounCnt + 1) % len(nouns)
                 posCnt = (posCnt + 1)
-                nounCnt = (nounCnt + 1) % len(nouns)
+                
                 
             if(labeledData[i][1]=="NNS"):
                 if(posCnt % 2==0):
                     labeledData[i] = (nouns[nounCnt] + "s","NN")
+                    nounCnt = (nounCnt + 1) % len(nouns)
                 posCnt = (posCnt + 1)
-                nounCnt = (nounCnt + 1) % len(nouns)
         for word in labeledData:
             output = output + " " + word[0]
         output = output +"\n"
@@ -98,8 +101,13 @@ def replaceNouns(poem, nouns):
     
     
 def replaceVerbs(poem, verbs):
+    print(verbs)
     splitPoem = poem.split("\n")
     output = ""
+    #the posision so only replace every other noun
+    posCnt = 0;
+    #the position of the pointer in the noun list
+    nounCnt = 0;
     for line in splitPoem:
         #breaks up and labels the poem
         segmentedLine = word_tokenize(line)
@@ -112,32 +120,25 @@ def replaceVerbs(poem, verbs):
                 cnt = cnt+1
         #cnt now has the count of the total number of nouns
         cnt = int(cnt/2)
-        #the posision so only replace every other noun
-        posCnt = 0;
-        #the position of the pointer in the noun list
-        nounCnt = 0;
         
         for i in range(len(labeledData)):
             if(labeledData[i][1]=="VBZ" or labeledData[i][1]=="VBP"or labeledData[i][1]=="VBN"or labeledData[i][1]=="VB"or labeledData[i][1]=="VBD"):
                 if(posCnt % 2==0):
                     labeledData[i] = (verbs[nounCnt],"VB")
+                    nounCnt = (nounCnt + 1) % len(verbs)
                 posCnt = (posCnt + 1)
-                nounCnt = (nounCnt + 1) % len(verbs)
                 
             if(labeledData[i][1]=="VBG"):
                 if(posCnt % 2==0):
                     labeledData[i] = (verbs[nounCnt] + "ing","VBG")
+                    nounCnt = (nounCnt + 1) % len(verbs)
                 posCnt = (posCnt + 1)
-                nounCnt = (nounCnt + 1) % len(verbs)
         for word in labeledData:
             output = output + " " + word[0]
         output = output +"\n"
     return output
     
     
-poem = genPoem(3)
-print(poem)
-p = replaceVerbs(poem,["cow","chicken","pig"])
-print(p)
+
 
 
