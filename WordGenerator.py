@@ -1,7 +1,8 @@
 import re
+import json
 
 #put whatever file name here
-nameOfFile = "Untitled spreadsheet - PoetryFoundationData.csv"
+nameOfFile = "CleanedPoetry.txt"
 numWords = 0
 
 #breaks down the file given to the n gram data
@@ -20,6 +21,7 @@ def decomposeByN(fileName,letterBag,n):
                 convertingToString = ""
                 for i in range(len(word)-1):
                     convertingToString = convertingToString + word[i]+" "
+                #this next line is outside the loop to not have a space at the end
                 convertingToString = convertingToString + word[len(word)-1]
                 word = convertingToString
                 #ignores empty lines
@@ -37,13 +39,36 @@ def decomposeByN(fileName,letterBag,n):
                 
         #for i in range(2469):
         f.close()
+        
+def nGramDict(fileName,gram,n):
+    global numWords
+    allWords = []
+    with open(fileName,encoding='utf8') as f:
+        lineByLine = f.readlines()
+        for line in lineByLine:
+            #makes all words in line lower case for ease of camparison
+            line = line.lower()
+            #cleans the lines 
+            words = clean(line)
+            for word in words:
+                if(word==""):
+                    continue
+                allWords.append(word)
+               
+        f.close()
+    print("Collected all the words together")
     
-    #change all the occurances to percentages by dividing by numWords
-#     keys = list(letterBag.keys())
-#     for key in keys:
-#         letterBag.update({key:letterBag.get(key)/numWords})
+    # got the code below from a youtube video
+    # "Generating Sentences with n-grams using Python"
+    # by Douglas Starnes
+    for i in range(len(allWords)-1):
+        try:
+            gram[allWords[i]].append(allWords[i+1])
+        except KeyError as _:
+            gram[allWords[i]] = []
+            gram[allWords[i]].append(allWords[i+1])
     
-    return(letterBag)
+    return(gram)
     
     
     
@@ -55,16 +80,23 @@ def clean(line):
 
 #the n grams for 1, 2, and 3
 oneLB = {}
+nGram = {}
 
 file = nameOfFile
 
 try:
-    decomposeByN(file,oneLB,1)
+    ans = nGramDict(file,nGram,1)
         
 except FileNotFoundError:
     print("File not found when reading in.")
-print("There are "+str(numWords)+" words.")
-print(str(oneLB))
+# print("There are "+str(numWords)+" words.")
+
+print(ans)
+
+with open("dictGram.txt" , 'w') as file:
+    json_object = json.dumps(ans, indent = 4)
+    file.write(json_object)
+    file.close()
 
 
 
