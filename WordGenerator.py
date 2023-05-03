@@ -56,8 +56,7 @@ def nGramDict(fileName,gram,n):
                 allWords.append(word)
                
         f.close()
-    print("Collected all the words together")
-    
+        
     # got the code below from a youtube video
     # "Generating Sentences with n-grams using Python"
     # by Douglas Starnes
@@ -78,25 +77,25 @@ def clean(line):
     rtrn = re.split(" ", cleanStrings)
     return rtrn
 
-#the n grams for 1, 2, and 3
-oneLB = {}
-nGram = {}
+def makeDict():
+    #the n grams for 1, 2, and 3
+    oneLB = {}
+    nGram = {}
 
-file = nameOfFile
+    file = nameOfFile
 
-try:
-    ans = nGramDict(file,nGram,1)
-        
-except FileNotFoundError:
-    print("File not found when reading in.")
-# print("There are "+str(numWords)+" words.")
+    try:
+        ans = nGramDict(file,nGram,1)
+            
+    except FileNotFoundError:
+        print("File not found when reading in.")
+    # print("There are "+str(numWords)+" words.")
 
-print(ans)
-
-with open("dictGram.txt" , 'w') as file:
-    json_object = json.dumps(ans, indent = 4)
-    file.write(json_object)
-    file.close()
+    with open("dictGram.txt" , 'w') as file:
+        json_object = json.dumps(ans, indent = 4)
+        file.write(json_object)
+        file.close()
+    print("Made dictGram.txt")
 
 
 

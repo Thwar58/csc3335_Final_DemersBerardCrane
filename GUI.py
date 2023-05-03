@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-#import DictPoemGen as pg
+import DictPoemGen as pg
+import random
 # got a lot of help from the documentation https://pypi.org/project/PySimpleGUI/ because it is
 # all of our first times making a python gui
 def startGUI():
@@ -20,30 +21,38 @@ def startGUI():
     if event == sg.WINDOW_CLOSED or event == 'Quit':
         window.close()
     if event == 'Generate':
-        #nouns = values['-NOUNS-'].replace(" ", "").split(',')
-        #verbs = values['-VERBS-'].replace(" ", "").split(',')
-        poem = 'Skyrim is the most fun video game of all time'
-        print("creates poem")
-        #poem = pg.genSen(10)
+        nouns = values['-NOUNS-'].replace(" ", "").split(',')
+        verbs = values['-VERBS-'].replace(" ", "").split(',')
+        #generates poem of varying length
+        poem = pg.genPoem(random.randint(5,12))
+        window.close()
     
-        #replaces nouns and verbs here
+        #replaces nouns and verbs here only if nouns and verbs arent empty
+        if(not len(nouns)==1 or not nouns[0] == ''):
+            poem = pg.replaceNouns(poem,nouns)
+        if(not len(verbs)==1 or not verbs[0] == ''):
+            poem = pg.replaceVerbs(poem,verbs)
 
 
         #makes layout for display window
         displayLayout = [[sg.Text('Finalized Mad Lib Poem')],
                     [sg.Text(poem)],
-                    [sg.Button('Try Again'), sg.Button('Quit')]]
-        print("creates layout")
+                    [sg.Button('Try Again'), sg.Button('Save'), sg.Button('Quit')]]
         # Finish up by removing from the screen
         #window.close()
-        print("closes window")
+        
         # Create the window
         finalWindow = sg.Window('Final Poem', displayLayout)
         event, values = finalWindow.read()
-        print("opens new window")
         if event == sg.WINDOW_CLOSED or event == 'Quit':
             finalWindow.close()
         if(event == 'Try Again'):
             finalWindow.close()
             startGUI()
+        if(event == "Save"):
+            with open("Poem.txt",'w') as file:
+                file.write(poem)
+                file.close()
+            finalWindow.close()
+
 startGUI()
