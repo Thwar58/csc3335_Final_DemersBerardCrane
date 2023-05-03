@@ -3,13 +3,20 @@ import random
 import nltk
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
+import WordGenerator
 
 gram = {}
-
-with open("dictGram.txt", encoding='utf8') as file:
-    data = file.read()
-    gram = json.loads(data)
-    file.close()
+try:
+    with open("dictGram.txt", encoding='utf8') as file:
+        data = file.read()
+        gram = json.loads(data)
+        file.close()
+except FileNotFoundError:
+    WordGenerator.makeDict()
+    with open("dictGram.txt", encoding='utf8') as file:
+        data = file.read()
+        gram = json.loads(data)
+        file.close()
     
 def genSen(sz, seed):
     words = []
