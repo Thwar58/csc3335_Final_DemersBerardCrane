@@ -84,6 +84,7 @@ def makeDict():
 
     file = nameOfFile
 
+
     try:
         ans = nGramDict(file,nGram,1)
             
