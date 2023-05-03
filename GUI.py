@@ -54,4 +54,5 @@ def startGUI():
                 file.write(poem)
                 file.close()
             finalWindow.close()
+
 startGUI()
