@@ -8,6 +8,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.layers import Embedding, LSTM, Dense
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import load_model
 # Sources:
 # https://www.geeksforgeeks.org/lstm-based-poetry-generation-using-nlp-in-python/#
 # https://kgptalkie.medium.com/poetry-generation-using-tensorflow-keras-and-lstm-75c4e4b7f07e
@@ -69,7 +70,7 @@ model.add(Dense(100, activation='relu'))
 model.add(Dense(vocab_size, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 # Model training
-model.fit(X, y, batch_size=128, epochs=50)
+model.fit(X, y, batch_size=64, epochs=50)
 
 # Save the model
 model.save("model2.h5")

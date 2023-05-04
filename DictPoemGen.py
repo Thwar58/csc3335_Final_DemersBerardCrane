@@ -105,8 +105,6 @@ def replaceNouns(poem, nouns):
         output = output +"\n"
     return output
     
-    
-    
 def replaceVerbs(poem, verbs):
     print(verbs)
     splitPoem = poem.split("\n")
